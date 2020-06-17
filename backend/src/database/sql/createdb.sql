@@ -1,34 +1,49 @@
 -- CREATE ROLE jhonn WITH LOGIN PASSWORD 'carbono12';
+--\i /Users/jhonnatha_am/Development/portfolio/projects/e-coleta/backend/src/database/sql/createdb.sql
 CREATE DATABASE e_coleta_db;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE users (
-  user_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
-  first_name VARCHAR NOT NULL,
-  second_name VARCHAR NOT NULL,
-  email VARCHAR NOT NULL,
-  phone VARCHAR NOT NULL,
-  address VARCHAR NOT NULL,
-  password VARCHAR NOT NULL
+DROP TABLE IF EXISTS points_items;
+DROP TABLE IF EXISTS points;
+DROP TABLE IF EXISTS items;
+
+CREATE TABLE points (
+  point_id    serial PRIMARY KEY
+, name        VARCHAR NOT NULL
+, email       VARCHAR NOT NULL
+, whatsapp    VARCHAR NOT NULL
+, latitude    NUMERIC NOT NULL DEFAULT 0
+, longitude   NUMERIC NOT NULL DEFAULT 0
+, city        VARCHAR NOT NULL
+, uf          VARCHAR(2) NOT NULL
 );
 
-CREATE TABLE companies (
-  company_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
-  name VARCHAR NOT NULL,
-  email VARCHAR NOT NULL,
-  phone VARCHAR NOT NULL,
-  address VARCHAR NOT NULL
+CREATE TABLE items (
+  item_id     serial PRIMARY KEY
+, image       VARCHAR NOT NULL
+, title       VARCHAR NOT NULL
 );
 
--- Populating database
-INSERT INTO users (first_name, second_name, email, phone, address, password) 
-  VALUES ('Jerry', 'Coss', 'jerry@gmail.com', '+558381337200', 'Joao Pessoa - PB', 'senha1'), 
-         ('Mary', 'Coss', 'Mary@gmail.com', '+558381335200', 'Joao Pessoa - PB', 'senha1'),
-         ('Marco', 'Coss', 'marco@gmail.com', '+558384337200', 'Campina Grande - PB', 'senha4'), 
-         ('Josh', 'Coss', 'jerry@gmail.com', '+558383337200', 'Recife - PE', 'senha3'), 
-         ('Mathias', 'Coss', 'mathias@gmail.com', '+558382337200', 'Rio de Janeiro - RJ', 'senha2');
+CREATE TABLE points_items (
+  point_id    int REFERENCES points (point_id) ON UPDATE CASCADE ON DELETE CASCADE
+, item_id     int REFERENCES items (item_id) ON UPDATE CASCADE ON DELETE CASCADE
+, CONSTRAINT points_items_pkey PRIMARY KEY (point_id, item_id)
+);
 
-INSERT INTO companies (name, email, phone, address) 
-  VALUES ('ENLU', 'enlu@contato.com', '+558381337200', 'Joao Pessoa - PB'),
-         ('ENLAU', 'enlau@contato.com', '+558381337300', 'Joao Pessoa - RJ'),
-         ('NACIONAL', 'nacional@contato.com', '+558441337300', 'Joao Pessoa - RJ');
+INSERT INTO points (name, email, whatsapp, city, uf) 
+  VALUES  ('Ponto1', 'ponto1@gmail.com', '+55839114532', 'Joao Pessoa', 'PB')
+        , ('Ponto3', 'ponto1@gmail.com', '+55839114532', 'Joao Pessoa', 'PB')
+        , ('Ponto2', 'ponto1@gmail.com', '+55839114532', 'Joao Pessoa', 'PB');
+
+INSERT INTO items (title, image) 
+  VALUES  ('Lâmpadas', 'lampadas.svg')
+        , ('Pilhas e Baterias', 'baterias.svg')
+        , ('Papéis e Papelão', 'papeis-papelao.svg')
+        , ('Resíduos Eletrônicos', 'eletronicos.svg')
+        , ('Resíduos Orgânicos', 'organicos.svg')
+        , ('Óleo de Cozinha', 'oleo.svg');
+
+-- Ponto 1 coleta os itens 1 e 2
+INSERT INTO points_items (point_id, item_id)
+  VALUES  (1, 1)
+        , (1, 2);

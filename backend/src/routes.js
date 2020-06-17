@@ -1,21 +1,25 @@
 const express = require("express");
 
-const db = require("./database/queries");
+const PointsController = require("./controllers/PointsController");
+const ItemsController = require("./controllers/ItemsController");
+
+const points = new PointsController();
+const item = new ItemsController();
 
 const routes = express.Router();
 
-// Users routes
-routes.get("/users", db.getUsers);
-routes.get("/users/:id", db.getUserById);
-routes.post("/users", db.createUser);
-routes.patch("/users/:id", db.updateUser);
-routes.delete("/users/:id", db.deleteUser);
+// Points routes
+routes.get("/points", points.getPoints);
+routes.get("/points/:id", points.getPointById);
+routes.post("/points", points.createPoint);
+routes.patch("/points/:id", points.updatePoint);
+routes.delete("/points/:id", points.deletePoint);
 
-// Companies routes
-routes.get("/companies", db.getCompanies);
-routes.get("/companies/:id", db.getCompanyById);
-routes.post("/companies", db.createCompany);
-routes.patch("/companies/:id", db.updateCompany);
-routes.delete("/companies/:id", db.deleteCompany);
+// Items routes
+routes.get("/items", item.getItems);
+routes.get("/items/:id", item.getItemById);
+routes.post("/items", item.createItem);
+routes.patch("/items/:id", item.updateItem);
+routes.delete("/items/:id", item.deleteItem);
 
 module.exports = routes;

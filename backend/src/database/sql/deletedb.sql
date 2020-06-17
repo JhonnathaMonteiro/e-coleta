@@ -1,3 +1,0 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS companies;
-DROP DATABASE e_coleta_db;
